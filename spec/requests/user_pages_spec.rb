@@ -75,6 +75,16 @@ describe "User pages" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
+
+      describe "from other users" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        let!(:m3) { FactoryGirl.create(:micropost, user: other_user, content: "Foo") }
+
+        before { visit user_path(other_user) }
+
+        it { should have_content(m3.content) }
+        it { should_not have_link('delete') }
+      end
     end
   end
 
